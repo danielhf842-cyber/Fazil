@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Select your region — Fazil Recruitment Group</title>
+<meta name="description" content="Fazil Recruitment Group — United Kingdom and United States.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="region.css">
+<script>if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!location.hash){window.scrollTo(0,0);}</script>
+</head>
+<body>
+
+<div class="region-splash">
+  <a href="uk.html" class="region-logo"><b>FAZIL</b><span>RECRUITMENT GROUP</span></a>
+
+  <a href="uk.html" class="region-card" aria-label="Enter the United Kingdom site">
+    <div class="img base"><img src="uk-finished.jpg" alt="London skyline"></div>
+    <div class="img build"><img src="uk-construction.jpg" alt="London under construction"></div>
+    <div class="txt">
+      <h2>United Kingdom</h2>
+      <p>Fazil Construction &middot; London head office</p>
+      <span class="btn btn-blue">Enter UK site &rarr;</span>
+    </div>
+  </a>
+
+  <a href="us.html" class="region-card" aria-label="Enter the United States site">
+    <div class="img base"><img src="us-finished.jpg" alt="New York skyline"></div>
+    <div class="img build"><img src="us-construction.jpg" alt="New York under construction"></div>
+    <div class="txt">
+      <h2>United States</h2>
+      <p>Fazil United States &middot; New York &amp; Dallas</p>
+      <span class="btn btn-white">Enter US site &rarr;</span>
+    </div>
+  </a>
+</div>
+
+<script>
+  // Touch devices: first tap shows the construction photo, second tap enters
+  var canHover = !window.matchMedia || window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!canHover) {
+    var tapped = null;
+    document.querySelectorAll('.region-card').forEach(function (card) {
+      card.addEventListener('click', function (e) {
+        if (tapped === card) return;
+        e.preventDefault();
+        if (tapped) tapped.classList.remove('is-tapped');
+        card.classList.add('is-tapped');
+        tapped = card;
+      });
+    });
+  }
+</script>
+</body></html>

@@ -1,0 +1,43 @@
+/* ==========================================================
+   Region selector splash (index.html)
+   ========================================================== */
+:root{--blue:#0971CE;--blue-dark:#075aa3;--navy:#0F1941;--grey-100:#f3f5f9;--ease:cubic-bezier(.22,.61,.36,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--navy);color:#fff;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;height:100%;object-fit:cover}
+
+.region-splash{position:relative;min-height:100vh;min-height:100dvh;display:grid;grid-template-columns:1fr 1fr}
+
+.region-logo{position:absolute;top:32px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;line-height:1;text-align:center;color:#fff}
+.region-logo b{font-size:28px;font-weight:900;letter-spacing:.02em}
+.region-logo span{display:block;font-size:9px;letter-spacing:.3em;color:#8cc0f4;font-weight:700;margin-top:4px}
+
+.region-card{position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:56px;color:#fff;min-height:50vh}
+.region-card .img{position:absolute;inset:0;transition:opacity .8s var(--ease),transform 1.2s var(--ease)}
+.region-card .img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,25,65,.35),rgba(15,25,65,.92));transition:background .3s var(--ease)}
+.region-card .img.build{opacity:0}
+.region-card .txt{position:relative;z-index:1}
+.region-card h2{color:#fff;font-size:44px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.region-card p{color:rgba(255,255,255,.85);font-size:16px;margin-bottom:18px}
+
+/* hover: finished → construction */
+.region-card:hover .img.base,.region-card:focus-visible .img.base,.region-card.is-tapped .img.base{opacity:0}
+.region-card:hover .img.build,.region-card:focus-visible .img.build,.region-card.is-tapped .img.build{opacity:1;transform:scale(1.04)}
+.region-card:hover .img::after{background:linear-gradient(180deg,rgba(9,113,206,.3),rgba(15,25,65,.9))}
+.region-card:focus-visible{outline:3px solid #fff;outline-offset:-3px}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;padding:12px 22px;border-radius:6px;border:none;transition:background .15s,color .15s}
+.btn-blue{background:var(--blue);color:#fff}
+.region-card:hover .btn-blue{background:var(--blue-dark)}
+.btn-white{background:#fff;color:var(--navy)}
+.region-card:hover .btn-white{background:var(--grey-100)}
+
+@media (max-width:1000px){
+  .region-splash{grid-template-columns:1fr}
+  .region-card{padding:32px;min-height:50vh}
+  .region-card h2{font-size:32px}
+  .region-logo{top:20px}
+  .region-logo b{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){.region-card .img{transition-duration:.01ms!important}}
