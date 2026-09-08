@@ -1,7 +1,7 @@
 /* ============================================================
    FAZIL — site behaviour
    ============================================================ */
-(function () {
+function fazilInit() {
   var JOBS = window.FAZIL_JOBS || [];
   var CFG = window.FAZIL_CONFIG || {};
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -167,7 +167,7 @@
         '<div class="job-head"><div class="wrap"><div class="crumbs" style="color:var(--grey-700)"><a href="index.html">Home</a> / <a href="jobs.html">Live jobs</a> / ' + j.sector + '</div>' +
         (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<h1>' + j.title + '</h1><div class="meta"><span>' + j.city + ', UK</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span><span>' + j.sector + '</span></div></div></div>' +
         '<section><div class="wrap job-detail"><div><p style="font-size:18px;color:var(--navy);font-weight:500">' + j.summary + '</p><h3>About this role</h3><p>' + j.about + '</p><h3>What we\'re looking for</h3><ul>' + j.requirements.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul><h3>How to apply</h3><p>Click apply and a sector specialist will call you within one working day. You\'ll need a Fazil account &mdash; it takes 30 seconds.</p></div>' +
-        '<aside class="job-aside"><a href="register.html?next=job.html%3Fid%3D' + j.id + '" class="btn btn-blue btn-lg">Apply for this role &rarr;</a><a href="contact.html" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', United Kingdom</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
+        '<aside class="job-aside"><div data-apply-note class="notice"></div><button data-apply="' + j.id + '" class="btn btn-blue btn-lg">Apply for this role &rarr;</button><a href="contact-candidates.html" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', United Kingdom</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
     }
   }
 
@@ -183,12 +183,12 @@
     $$('button', tabs).forEach(function (b) { b.addEventListener('click', function () { show(b.getAttribute('data-tab')); history.replaceState(null, '', '#' + b.getAttribute('data-tab')); }); });
     show((location.hash || '#all').slice(1));
   }
-})();
+}
 
 /* ============================================================
    v3 — featured job cards, job-alert hidden fields, scroll top
    ============================================================ */
-(function () {
+function fazilInit2() {
   var JOBS = window.FAZIL_JOBS || [];
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -222,4 +222,12 @@
       h.value = m && m.getValues ? m.getValues().join(', ') : '';
     });
   });
+}
+
+/* ---- boot: wait for Supabase data, then render ---- */
+(function () {
+  function boot() { try { fazilInit(); } catch (e) { console.error(e); } try { fazilInit2(); } catch (e) { console.error(e); } }
+  var ready = window.FAZIL_READY || Promise.resolve();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { ready.then(boot); });
+  else ready.then(boot);
 })();

@@ -118,11 +118,8 @@
 
 <section class="bg-navy" id="alert-form"><div class="wrap">
   <div class="sec-head"><div><div class="label">Create your job alert</div><h2>Tell us what you want. We'll do the looking.</h2><p>Pick as many roles and cities as you like. We email you when a matching role goes live &mdash; usually before it hits the job boards. Unsubscribe any time.</p></div></div>
-  <form class="alert-form" name="job-alert" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-alert>
-    <input type="hidden" name="form-name" value="job-alert">
-    <input type="hidden" name="roles" data-hidden="role">
-    <input type="hidden" name="cities" data-hidden="loc">
-    <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+  <div id="alert-notice" class="notice"></div>
+  <form class="alert-form" data-alert>
     <div class="field"><label>Your email</label><input type="email" name="email" placeholder="you@example.com" required></div>
     <div class="field msel" data-key="role"><label>Roles you want</label><div class="msel-box" data-ph="All roles"></div><div class="msel-panel"></div></div>
     <div class="field msel" data-key="loc"><label>Cities</label><div class="msel-box" data-ph="All cities"></div><div class="msel-panel"></div></div>
@@ -167,9 +164,12 @@
     <div class="legal"><a href="#">Terms of use</a><a href="#">Privacy policy</a><a href="#">Cookies</a><a href="#">Whistleblowing</a><a href="#">Cookie settings</a></div>
   </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="jobs-data.js"></script>
+<script src="db.js"></script>
 <script src="main.js"></script>
+<script src="auth.js"></script>
 
 </body>
 </html>

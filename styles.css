@@ -483,3 +483,29 @@ html{scroll-behavior:auto}
 @media (max-width:1000px){
   .jobs-grid,.choice-row,.contact-tiles,.office-list,.alert-form{grid-template-columns:1fr}
 }
+
+/* ---------- admin ---------- */
+[data-admin]{opacity:.4;pointer-events:none}
+[data-admin].ready{opacity:1;pointer-events:auto}
+[data-admin] .empty{background:#fff}
+.admin-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.admin-form .full{grid-column:1/-1}
+.admin-form .field{margin:0}
+.admin-form textarea{width:100%;border:none;outline:none;font-family:var(--sans);font-size:15px;color:var(--ink);resize:vertical}
+.admin-form select{color:var(--ink)}
+.checkrow{display:flex;gap:24px;flex-wrap:wrap;font-size:14px;font-weight:600;color:var(--navy)}
+.checkrow label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.checkrow input{width:16px;height:16px;accent-color:var(--blue)}
+.admin-row{display:grid;grid-template-columns:2fr 1.4fr auto;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+.admin-row:last-child{border-bottom:none}
+.admin-row b{display:block;font-size:15px;color:var(--navy)}
+.admin-row span{display:block;font-size:13px;color:var(--grey-700)}
+.admin-row .acts{display:flex;gap:8px;align-items:center}
+.admin-row .btn{padding:8px 14px;font-size:13px}
+.btn-danger{background:#fdecec;color:#9b1c1c;border:1px solid #f5c2c2}
+.btn-danger:hover{background:#f9dcdc}
+.row-line{padding:10px 0;border-bottom:1px solid var(--border)}
+.row-line:last-child{border:none}
+.row-line b{display:block;font-size:14.5px;color:var(--navy)}
+.row-line span{font-size:13px;color:var(--grey-700)}
+@media (max-width:900px){.admin-form,.admin-row{grid-template-columns:1fr}}

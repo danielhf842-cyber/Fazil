@@ -7,8 +7,8 @@
   var $ = function (s) { return document.querySelector(s); };
   var note = $('#notice');
   function say(type, msg) { if (!note) return; note.className = 'notice ' + type; note.textContent = msg; }
-  var ready = !!(CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase);
-  var sb = ready ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey) : null;
+  var sb = window.FAZIL_SB || null;
+  var ready = !!sb;
   if (!ready) say('info', 'Accounts aren\'t switched on yet — add your Supabase URL and anon key to config.js.');
 
   var next = new URLSearchParams(location.search).get('next') || 'account.html';
@@ -71,8 +71,73 @@
     var u = s.data.session.user;
     var nm = $('[data-user-name]'); if (nm) nm.textContent = (u.user_metadata && u.user_metadata.full_name) || u.email;
     var em = $('[data-user-email]'); if (em) em.textContent = u.email;
-    var out = $('#logout'); if (out) out.addEventListener('click', async function (e) { e.preventDefault(); await sb.auth.signOut(); go('index.html'); });
+    var out = $('#logout'); if (out) out.addEventListener('click', async function (e) { e.preventDefault(); await sb.auth.signOut(); go('uk.html'); });
+
+    // admin link
+    var prof = await sb.from('profiles').select('is_admin').eq('id', u.id).maybeSingle();
+    if (prof.data && prof.data.is_admin) {
+      var nav = $('.account-nav');
+      if (nav) nav.insertAdjacentHTML('beforeend', '<a href="admin.html" style="color:var(--blue)">Admin</a>');
+    }
+
+    // applications
+    var box = $('[data-applications]');
+    if (box) {
+      var r = await sb.from('applications').select('id, job_id, status, created_at, jobs(title, city, salary, sector)').order('created_at', { ascending: false });
+      if (r.error || !r.data || !r.data.length) {
+        box.innerHTML = '<p>You haven\'t applied for anything yet. <a href="jobs.html" style="color:var(--blue);font-weight:700">Browse live roles</a> — when you apply, a sector specialist calls you within one working day.</p>';
+      } else {
+        box.innerHTML = '<div class="jobs-grid" style="grid-template-columns:1fr">' + r.data.map(function (a) {
+          var j = a.jobs || {};
+          return '<a href="job.html?id=' + a.job_id + '" class="job-card"><span class="sector">' + (j.sector || '') + '</span><h3>' + (j.title || a.job_id) + '</h3><div class="row">' + (j.city || '') + ' · <b>' + (j.salary || '') + '</b></div><div class="foot"><span>Applied ' + new Date(a.created_at).toLocaleDateString() + '</span><span class="link">' + a.status + '</span></div></a>';
+        }).join('') + '</div>';
+      }
+    }
+
+    // alerts
+    var ab = $('[data-my-alerts]');
+    if (ab) {
+      var al = await sb.from('job_alerts').select('*').order('created_at', { ascending: false });
+      ab.innerHTML = (al.data && al.data.length)
+        ? al.data.map(function (x) { return '<div class="row-line"><b>' + ((x.roles || []).join(', ') || 'All roles') + '</b><span>' + ((x.cities || []).join(', ') || 'All cities') + ' · ' + x.frequency + '</span></div>'; }).join('')
+        : '<p>No job alerts yet. <a href="job-alerts.html" style="color:var(--blue);font-weight:700">Create one</a> and we\'ll email you matching roles.</p>';
+    }
   })();
+
+  /* ---- APPLY BUTTON (job detail page) ---- */
+  document.addEventListener('click', async function (e) {
+    var btn = e.target.closest('[data-apply]');
+    if (!btn) return;
+    e.preventDefault();
+    if (!ready) return alert('Applications are not switched on yet.');
+    var jobId = btn.getAttribute('data-apply');
+    var s = await sb.auth.getSession();
+    if (!s.data.session) return go('login.html?next=' + encodeURIComponent('job.html?id=' + jobId));
+    btn.disabled = true; btn.textContent = 'Sending…';
+    var r = await sb.from('applications').insert({ user_id: s.data.session.user.id, job_id: jobId });
+    if (r.error && r.error.code === '23505') { btn.textContent = 'Already applied ✓'; return; }
+    if (r.error) { btn.disabled = false; btn.textContent = 'Apply for this role →'; return alert(r.error.message); }
+    btn.textContent = 'Application sent ✓';
+    var note = document.querySelector('[data-apply-note]');
+    if (note) { note.className = 'notice ok'; note.textContent = 'Application received. A sector specialist will call you within one working day.'; }
+  });
+
+  /* ---- JOB ALERT FORM → Supabase ---- */
+  var af = document.querySelector('[data-alert]');
+  if (af && ready) af.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var get = function (k) { var m = af.querySelector('.msel[data-key="' + k + '"]'); return m && m.getValues ? m.getValues() : []; };
+    var s = await sb.auth.getSession();
+    var r = await sb.from('job_alerts').insert({
+      email: af.querySelector('[name=email]').value.trim(),
+      roles: get('role'), cities: get('loc'),
+      frequency: af.querySelector('[name=frequency]').value,
+      user_id: s.data.session ? s.data.session.user.id : null
+    });
+    var n = document.querySelector('#alert-notice');
+    if (n) { n.className = 'notice ' + (r.error ? 'err' : 'ok'); n.textContent = r.error ? r.error.message : 'Alert created. We\'ll email you when a matching role goes live.'; }
+    if (!r.error) af.reset();
+  });
 
   /* ---- header: swap "Sign in" for name when logged in ---- */
   if (ready) sb.auth.getSession().then(function (s) {

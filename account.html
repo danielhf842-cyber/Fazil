@@ -60,8 +60,8 @@
   <div class="label">My account</div>
   <div class="sec-head"><div><h2>Hi, <span data-user-name>there</span>.</h2><p><span data-user-email></span></p></div><a href="#" id="logout" class="btn btn-outline">Sign out</a></div>
   <div class="account-grid">
-    <div class="account-nav"><a href="#" class="sel">Overview</a><a href="jobs.html">Browse live jobs</a><a href="candidates.html#alerts">Job alerts</a><a href="#">My applications</a><a href="#">Profile &amp; CV</a></div>
-    <div class="panel"><h2>Your applications</h2><p>You haven't applied for anything yet. <a href="jobs.html" style="color:var(--blue);font-weight:700">Browse <span data-live-jobs>0</span> live roles</a> &mdash; when you apply, a sector specialist calls you within one working day.</p></div>
+    <div class="account-nav"><a href="#" class="sel">Overview</a><a href="jobs.html">Browse live jobs</a><a href="job-alerts.html">Create a job alert</a><a href="contact-candidates.html">Contact my consultant</a></div>
+    <div><div class="panel" style="margin-bottom:20px"><h2>Your applications</h2><div data-applications style="margin-top:14px"><p>Loading…</p></div></div><div class="panel"><h2>Your job alerts</h2><div data-my-alerts style="margin-top:14px"><p>Loading…</p></div></div></div>
   </div>
 </div></section>
 <footer>
@@ -85,9 +85,12 @@
     <div class="legal"><a href="#">Terms of use</a><a href="#">Privacy policy</a><a href="#">Cookies</a><a href="#">Whistleblowing</a><a href="#">Cookie settings</a></div>
   </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="jobs-data.js"></script>
+<script src="db.js"></script>
 <script src="main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="auth.js"></script>
+<script src="auth.js"></script>
+
 </body>
 </html>

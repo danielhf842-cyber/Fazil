@@ -1,8 +1,8 @@
 // ============================================================
-//  LIVE JOBS (United Kingdom). Add / remove jobs here.
-//  Later the admin page will manage these in Supabase.
+//  FALLBACK jobs — only used if Supabase is unreachable.
+//  Manage the real list in admin.html.
 // ============================================================
-window.FAZIL_JOBS = [
+window.FAZIL_JOBS_FALLBACK = [
   { id:"spm-london", title:"Senior Project Manager", city:"London", salary:"£75,000–£95,000", type:"Permanent", sector:"Construction & Civils", featured:true, posted:"2026-09-01",
     summary:"Lead large-scale civil engineering and construction projects across London and the South East.",
     about:"We are seeking an experienced Senior Project Manager to oversee large-scale civil engineering and construction projects across London and the South East. You will lead multidisciplinary teams, manage budgets exceeding £50m, and ensure delivery to programme, budget and quality.",
