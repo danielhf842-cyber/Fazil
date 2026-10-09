@@ -75,7 +75,7 @@ create table if not exists public.settings (
 );
 insert into public.settings (key, value) values
   ('candidates_placed', '500'),
-  ('years_experience',  '5')
+  ('years_experience',  '3')
 on conflict (key) do nothing;
 
 -- ------------------------------------------------------------

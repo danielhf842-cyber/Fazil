@@ -10,7 +10,7 @@ window.FAZIL_CONFIG = {
   // Fallback numbers, used only if Supabase is unreachable.
   // Edit the live values in the admin page (admin.html) instead.
   candidatesPlaced: 500,
-  yearsExperience: 5,
+  yearsExperience: 3,
 
   region: "United Kingdom"
 };
