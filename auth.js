@@ -116,13 +116,13 @@
     btn.disabled = true; btn.textContent = 'Sending…';
     var r = await sb.from('applications').insert({ user_id: s.data.session.user.id, job_id: jobId });
     if (r.error && r.error.code === '23505') { btn.textContent = 'Already applied ✓'; return; }
-    if (r.error) { btn.disabled = false; btn.textContent = 'Apply for this role →'; return alert(r.error.message); }
+    if (r.error) { btn.disabled = false; btn.textContent = 'Apply for this role'; return alert(r.error.message); }
     btn.textContent = 'Application sent ✓';
     var note = document.querySelector('[data-apply-note]');
     if (note) { note.className = 'notice ok'; note.textContent = 'Application received. A sector specialist will call you within one working day.'; }
   });
 
-  /* ---- JOB ALERT FORM → Supabase ---- */
+  /* ---- JOB ALERT FORM Supabase ---- */
   var af = document.querySelector('[data-alert]');
   if (af && ready) af.addEventListener('submit', async function (e) {
     e.preventDefault();

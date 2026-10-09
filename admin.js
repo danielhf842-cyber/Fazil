@@ -344,7 +344,7 @@
       if (!s.data.session) { location.href = 'login.html?next=admin.html'; return; }
       var p = await sb.from('profiles').select('is_admin, full_name').eq('id', s.data.session.user.id).maybeSingle();
       if (!p.data || !p.data.is_admin) {
-        gate.innerHTML = '<div class="wrap" style="padding:100px 0"><div class="empty"><b>Admins only.</b><br><br>This account doesn\'t have admin access. Run this in Supabase → SQL Editor:<br><br><code style="font-size:12px">update public.profiles set is_admin = true where email = \'' + esc(s.data.session.user.email) + '\';</code><br><br><a href="uk.html" style="color:var(--blue);font-weight:700">Back to the site</a></div></div>';
+        gate.innerHTML = '<div class="wrap" style="padding:100px 0"><div class="empty"><b>Admins only.</b><br><br>This account doesn\'t have admin access. Run this in Supabase SQL Editor:<br><br><code style="font-size:12px">update public.profiles set is_admin = true where email = \'' + esc(s.data.session.user.email) + '\';</code><br><br><a href="uk.html" style="color:var(--blue);font-weight:700">Back to the site</a></div></div>';
         return;
       }
       $('[data-admin-name]').textContent = p.data.full_name || s.data.session.user.email;
