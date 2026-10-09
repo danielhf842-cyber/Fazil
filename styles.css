@@ -509,3 +509,81 @@ html{scroll-behavior:auto}
 .row-line b{display:block;font-size:14.5px;color:var(--navy)}
 .row-line span{font-size:13px;color:var(--grey-700)}
 @media (max-width:900px){.admin-form,.admin-row{grid-template-columns:1fr}}
+
+/* ---------- admin v2 ---------- */
+.ov-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px}
+.ov{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.ov b{display:block;font-size:28px;font-weight:800;color:var(--navy);line-height:1}
+.ov span{font-size:12px;color:var(--grey-700);font-weight:600;margin-top:6px;display:block}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.toolbar input[type=search]{flex:1;min-width:200px;border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--sans);font-size:14px}
+.toolbar select{border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--sans);font-size:14px;background:#fff;color:var(--ink)}
+.toolbar .btn{padding:10px 14px;font-size:13px;margin-left:auto}
+.muted{font-size:13px;color:var(--grey-500)}
+.admin-row.job,.admin-row.app{grid-template-columns:1fr auto}
+.admin-row.app{grid-template-columns:1.1fr 1.4fr auto}
+.admin-row .main b{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.admin-row .main span.muted a{color:var(--blue);font-weight:600}
+.admin-row.is-hidden .main{opacity:.55}
+.admin-row .acts{flex-wrap:wrap;justify-content:flex-end}
+.admin-row .acts.col{flex-direction:column;align-items:stretch;gap:6px}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--navy)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.tag.uk{background:#e8eefb;color:var(--navy)}
+.tag.us{background:#e6f1fb;color:var(--blue)}
+.tag.grey{background:var(--grey-100);color:var(--grey-500)}
+.note{width:100%;margin-top:8px;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-family:var(--sans);font-size:13px;min-height:40px;resize:vertical;transition:border-color .2s}
+.note.saved{border-color:#22a35c}
+select.status{border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-family:var(--sans);font-size:13px;font-weight:700;background:#fff;color:var(--navy)}
+.status-submitted select.status{border-color:var(--blue);color:var(--blue)}
+.status-interviewing select.status,.status-offered select.status{border-color:#e8a93a;color:#8a5a00}
+.status-placed select.status{border-color:#22a35c;color:#166534}
+.status-rejected select.status{border-color:#e05252;color:#9b1c1c}
+.notice.info{display:block;background:var(--blue-tint);color:var(--navy);border:1px solid #c7ddf5}
+@media (max-width:1000px){.ov-grid{grid-template-columns:repeat(3,1fr)}.admin-row.job,.admin-row.app{grid-template-columns:1fr}.toolbar .btn{margin-left:0}}
+
+
+/* ---------- legal pages ---------- */
+.legal-wrap{display:grid;grid-template-columns:240px 1fr;gap:48px;align-items:start;padding-bottom:40px}
+.legal-nav{position:sticky;top:110px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px}
+.legal-nav .label{margin-bottom:10px}
+.legal-nav a{display:block;font-size:13.5px;color:var(--grey-700);padding:6px 0;border-bottom:1px solid var(--border)}
+.legal-nav a:last-child{border-bottom:none}
+.legal-nav a:hover{color:var(--blue)}
+.legal-nav a.other{color:var(--navy);font-weight:700}
+.legal-nav a.other:first-of-type{margin-top:10px;padding-top:12px;border-top:2px solid var(--border)}
+.legal-doc{background:#fff;border:1px solid var(--border);border-radius:12px;padding:48px 56px;max-width:860px}
+.legal-doc h1{font-size:40px;font-weight:800;margin-bottom:6px}
+.legal-doc .updated{font-size:13px;color:var(--grey-500);margin-bottom:28px}
+.legal-doc .lede{font-size:17px;color:var(--navy);line-height:1.7;margin-bottom:28px;padding:18px 20px;background:var(--grey-100);border-radius:8px}
+.legal-doc h2{font-size:22px;font-weight:800;margin:36px 0 12px;scroll-margin-top:110px}
+.legal-doc p,.legal-doc li{font-size:15px;color:var(--grey-700);line-height:1.75}
+.legal-doc p{margin-bottom:12px}
+.legal-doc ul{padding-left:22px;margin-bottom:14px}
+.legal-doc li{margin-bottom:6px}
+.legal-doc li ul{margin:6px 0 0}
+.legal-doc a{color:var(--blue);font-weight:600}
+.legal-doc b{color:var(--navy)}
+.legal-doc table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:14px}
+.legal-doc th,.legal-doc td{text-align:left;padding:10px 12px;border:1px solid var(--border);vertical-align:top;color:var(--grey-700);line-height:1.6}
+.legal-doc th{background:var(--grey-100);color:var(--navy);font-weight:700}
+.legal-doc code{font-family:monospace;font-size:13px;background:var(--grey-100);padding:2px 6px;border-radius:4px}
+.legal-doc mark.ph{background:#fff3c4;color:#7a5a00;padding:1px 6px;border-radius:4px;font-weight:700}
+.consent{font-size:12.5px;color:var(--grey-700);line-height:1.6;margin:10px 0 12px}
+.consent a{color:var(--blue);font-weight:600}
+.consent.light{color:rgba(255,255,255,.75);margin-top:14px}
+.consent.light a{color:#8cc0f4}
+.cookie-notice{position:fixed;left:16px;right:16px;bottom:16px;z-index:90;background:var(--navy);color:#fff;border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:20px;box-shadow:0 20px 50px rgba(15,25,65,.35);max-width:760px;margin:0 auto}
+.cookie-notice p{font-size:13.5px;line-height:1.55;margin:0;flex:1}
+.cookie-notice a{color:#8cc0f4;font-weight:700}
+.cookie-notice .btn{padding:10px 18px;font-size:13px;white-space:nowrap}
+@media (max-width:1000px){.legal-wrap{grid-template-columns:1fr}.legal-nav{position:static}.legal-doc{padding:28px 20px}.legal-doc h1{font-size:30px}.cookie-notice{flex-direction:column;align-items:stretch}}
+
+/* ---------- team (initials, 3-up) ---------- */
+.team.three{grid-template-columns:repeat(3,1fr);max-width:900px}
+.member .photo.initials{display:flex;align-items:center;justify-content:center;font-size:56px;font-weight:800;color:#fff;letter-spacing:.02em}
+.photo.av-1{background:linear-gradient(135deg,#0F1941,#0971CE)}
+.photo.av-2{background:linear-gradient(135deg,#1f2e3a,#3d6b8a)}
+.photo.av-3{background:linear-gradient(135deg,#16224f,#4f8fd6)}
+.member .li{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;font-weight:700;color:var(--blue)}
+@media (max-width:1000px){.team.three{grid-template-columns:1fr}}

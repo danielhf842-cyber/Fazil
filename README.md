@@ -18,6 +18,30 @@ Netlify: Build command EMPTY, Publish directory EMPTY (root).
 ## Deploy
 Push to GitHub → Netlify redeploys. Make sure NO old folders (fazil-site/, css/, js/) remain in the repo — delete them.
 
+## UK vs US
+- UK pages have `data-region="UK"` on <html>, US pages `data-region="US"`. main.js filters jobs by the
+  job's `country` and routes links (jobs, job pages) to the right region. Shared pages (login, register,
+  account, admin, legal) remember which region the visitor came from and point their nav back there.
+- Every job has a Country (UK/US) in the admin. UK pages show UK jobs, US pages show US jobs.
+- US sector names: "Construction & Civil", "MEP & Building Services", "Renovation" (UK: Civils, M&E, Refurbishment).
+- To seed the US example jobs: run `supabase-us-jobs.sql` once.
+
+## Admin (admin.html)
+Overview numbers, then five tabs:
+- **Jobs** — add / edit / duplicate / feature / hide / delete, search + UK/US + status filters, "View on site", application count per job.
+  Hidden jobs stay in the database but are not shown on the site. Deleting a job deletes its applications — prefer Hide.
+- **Applications** — status dropdown (submitted → contacted → interviewing → offered → placed / rejected), notes that save as you type, filters, CSV export.
+- **Candidates** — every registered account with their applications. CSV export.
+- **Job alerts** — pause / resume / delete, CSV export.
+- **Homepage numbers** — candidates placed, years in construction.
+After updating to this version run `supabase-admin-v2.sql` once (adds application notes + status list).
+
+## Legal pages
+privacy.html (incl. candidate privacy notice + US state rights), terms.html, cookies.html. Linked from every footer,
+the register checkbox, contact forms, job alerts and the apply box. A one-time cookie notice shows on first visit.
+Fill in the yellow placeholders in privacy.html: company number, ICO registration number, US entity type.
+Also create the mailbox privacy@fazilrecruitment.com (or change the address in all three pages).
+
 ## Backend (Supabase) — one-time setup
 
 Project: https://quiytibohpwfonyhgsev.supabase.co  (already filled into config.js)

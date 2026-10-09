@@ -12,7 +12,7 @@
 <script>if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!location.hash){window.scrollTo(0,0);}</script>
 </head>
 <body>
-<div class="region-bar"><div class="wrap"><span>Fazil Construction &middot; United Kingdom</span><a href="index.html">Change region &rarr;</a></div></div>
+<div class="region-bar"><div class="wrap"><span>Fazil Recruitment Group &middot; UK &amp; US</span><a href="index.html">Change region &rarr;</a></div></div>
 <header>
   <div class="wrap nav-inner">
     <a href="uk.html" class="logo"><b>FAZIL</b><span>RECRUITMENT GROUP</span></a>
@@ -57,40 +57,98 @@
 </header>
 
 <section class="bg-grey" style="min-height:80vh;padding-top:40px"><div class="wrap" data-admin>
-  <div class="sec-head" style="margin-bottom:24px"><div><div class="label">Admin</div><h2>Signed in as <span data-admin-name>…</span></h2></div><a href="#" id="logout" class="btn btn-outline">Sign out</a></div>
+  <div class="sec-head" style="margin-bottom:20px"><div><div class="label">Admin</div><h2>Signed in as <span data-admin-name>…</span></h2></div><div style="display:flex;gap:10px"><a href="uk.html" class="btn btn-outline" target="_blank">View site ↗</a><a href="#" id="logout" class="btn btn-outline">Sign out</a></div></div>
   <div id="admin-notice" class="notice"></div>
 
-  <div class="tabs" style="margin-bottom:28px">
+  <div class="ov-grid">
+    <div class="ov"><b data-ov-uk>0</b><span>Live UK jobs</span></div>
+    <div class="ov"><b data-ov-us>0</b><span>Live US jobs</span></div>
+    <div class="ov"><b data-ov-apps>0</b><span>Applications this week</span></div>
+    <div class="ov"><b data-ov-open>0</b><span>Open applications</span></div>
+    <div class="ov"><b data-ov-alerts>0</b><span>Active job alerts</span></div>
+    <div class="ov"><b data-ov-cands>0</b><span>Registered candidates</span></div>
+  </div>
+
+  <div class="tabs" style="margin-bottom:24px">
     <button data-tab-btn="jobs" class="sel">Jobs (<span data-jobs-count>0</span>)</button>
-    <button data-tab-btn="settings">Homepage numbers</button>
     <button data-tab-btn="apps">Applications (<span data-apps-count>0</span>)</button>
+    <button data-tab-btn="cands">Candidates (<span data-cands-count>0</span>)</button>
     <button data-tab-btn="alerts">Job alerts (<span data-alerts-count>0</span>)</button>
+    <button data-tab-btn="settings">Homepage numbers</button>
   </div>
 
   <!-- JOBS -->
   <div data-pane="jobs">
     <div class="panel" style="margin-bottom:20px">
       <h2 id="job-form-title">Add a new job</h2>
-      <p style="margin-bottom:20px">This is the live job list. Anything you add here appears immediately on the site &mdash; job count, search dropdowns, filters and its own page.</p>
+      <p style="margin-bottom:20px">Anything you save here appears on the site immediately &mdash; job count, search dropdowns, filters and its own page. Untick <b>Published</b> to prepare a job without showing it.</p>
       <form id="job-form" class="admin-form">
-        <div class="field"><label>Job title</label><input name="title" required></div>
-        <div class="field"><label>URL id (auto)</label><input name="id" required></div>
-        <div class="field"><label>City</label><input name="city" required placeholder="London"></div>
-        <div class="field"><label>Salary</label><input name="salary" required placeholder="£60,000&ndash;£75,000"></div>
+        <div class="field"><label>Job title</label><input name="title" required placeholder="Senior Project Manager"></div>
+        <div class="field"><label>URL id (auto from title)</label><input name="id" required></div>
+        <div class="field"><label>Country</label><select name="country"><option value="UK">United Kingdom</option><option value="US">United States</option></select></div>
+        <div class="field"><label>City</label><input name="city" required placeholder="London / New York"></div>
+        <div class="field"><label>Salary</label><input name="salary" required placeholder="£60,000&ndash;£75,000 or $90,000&ndash;$110,000"></div>
         <div class="field"><label>Type</label><select name="type"><option>Permanent</option><option>Contract</option><option>Temporary</option></select></div>
-        <div class="field"><label>Sector</label><select name="sector"><option>Construction & Civils</option><option>M&E & Building Services</option><option>Building Envelopes</option><option>Interior Fit-Out</option><option>Refurbishment</option><option>Project Controls</option></select></div>
+        <div class="field"><label>Sector</label><select name="sector"></select></div>
         <div class="field"><label>Date posted</label><input name="posted" type="date"></div>
-        <div class="field full"><label>One-line summary</label><input name="summary" placeholder="Lead large-scale civils projects across London and the South East."></div>
+        <div class="field full"><label>One-line summary (shown in lists)</label><input name="summary" placeholder="Lead large-scale civils projects across London and the South East."></div>
         <div class="field full"><label>About this role</label><textarea name="about" rows="4"></textarea></div>
         <div class="field full"><label>Requirements (one per line)</label><textarea name="requirements" rows="4" placeholder="10+ years' experience&#10;MRICS / MCIOB&#10;SMSTS"></textarea></div>
         <div class="checkrow full">
           <label><input type="checkbox" name="featured"> Featured (shows first, with a badge)</label>
           <label><input type="checkbox" name="published" checked> Published (visible on the site)</label>
         </div>
-        <div class="full" style="display:flex;gap:10px"><button class="btn btn-blue btn-lg" type="submit">Save job</button><button class="btn btn-outline" id="cancel-edit" hidden>Cancel edit</button></div>
+        <div class="full" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-blue btn-lg" type="submit">Save job</button><button class="btn btn-outline btn-lg" id="save-add" type="button">Save &amp; add another</button><button class="btn btn-outline" id="cancel-edit" type="button" hidden>Cancel edit</button></div>
       </form>
     </div>
-    <div class="panel"><h2>Live jobs</h2><div data-jobs-table style="margin-top:16px"></div></div>
+    <div class="panel">
+      <div class="toolbar">
+        <input id="jobs-q" type="search" placeholder="Search title, city, sector…">
+        <select id="jobs-region"><option value="all">UK + US</option><option value="UK">UK only</option><option value="US">US only</option></select>
+        <select id="jobs-state"><option value="all">All jobs</option><option value="published">Published</option><option value="hidden">Hidden</option><option value="featured">Featured</option></select>
+        <select id="jobs-sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="title">A&ndash;Z</option><option value="apps">Most applications</option></select>
+        <span class="muted">Showing <span data-jobs-shown>0</span></span>
+      </div>
+      <div data-jobs-table></div>
+    </div>
+  </div>
+
+  <!-- APPLICATIONS -->
+  <div data-pane="apps" hidden>
+    <div class="panel">
+      <div class="toolbar">
+        <input id="apps-q" type="search" placeholder="Search name, email, job…">
+        <select id="apps-status"><option value="all">All statuses</option><option>submitted</option><option>contacted</option><option>interviewing</option><option>offered</option><option>placed</option><option>rejected</option></select>
+        <select id="apps-region"><option value="all">UK + US</option><option value="UK">UK jobs</option><option value="US">US jobs</option></select>
+        <span class="muted">Showing <span data-apps-shown>0</span></span>
+        <button class="btn btn-outline" id="apps-export" type="button">Export CSV</button>
+      </div>
+      <p class="muted" style="margin-bottom:14px">Change the status from the dropdown; notes save by themselves as you type.</p>
+      <div data-apps-table></div>
+    </div>
+  </div>
+
+  <!-- CANDIDATES -->
+  <div data-pane="cands" hidden>
+    <div class="panel">
+      <div class="toolbar">
+        <input id="cands-q" type="search" placeholder="Search name, email, phone…">
+        <button class="btn btn-outline" id="cands-export" type="button">Export CSV</button>
+      </div>
+      <p class="muted" style="margin-bottom:14px">Everyone who has created an account on the site.</p>
+      <div data-cands-table></div>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div data-pane="alerts" hidden>
+    <div class="panel">
+      <div class="toolbar">
+        <input id="alerts-q" type="search" placeholder="Search email, role, city…">
+        <button class="btn btn-outline" id="alerts-export" type="button">Export CSV</button>
+      </div>
+      <div data-alerts-table></div>
+    </div>
   </div>
 
   <!-- SETTINGS -->
@@ -105,21 +163,11 @@
       </form>
     </div>
   </div>
-
-  <!-- APPLICATIONS -->
-  <div data-pane="apps" hidden>
-    <div class="panel"><h2>Applications</h2><div data-apps-table style="margin-top:16px"></div></div>
-  </div>
-
-  <!-- ALERTS -->
-  <div data-pane="alerts" hidden>
-    <div class="panel"><h2>Job alerts</h2><div data-alerts-table style="margin-top:16px"></div></div>
-  </div>
 </div></section>
 <footer>
   <div class="wrap">
     <div class="social">
-      <a href="#" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5z"/></svg></a>
+      <a href="https://www.linkedin.com/company/fazil-construction-rec/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5z"/></svg></a>
       <a href="#" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a2.9 2.9 0 0 0-2-2C19.2 4.7 12 4.7 12 4.7s-7.2 0-9 .5a2.9 2.9 0 0 0-2 2A30 30 0 0 0 .5 12a30 30 0 0 0 .5 4.8 2.9 2.9 0 0 0 2 2c1.8.5 9 .5 9 .5s7.2 0 9-.5a2.9 2.9 0 0 0 2-2 30 30 0 0 0 .5-4.8 30 30 0 0 0-.5-4.8zM9.7 15.1V8.9l6 3.1-6 3.1z"/></svg></a>
       <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
       <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-4 1.7-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z"/></svg></a>
@@ -134,7 +182,7 @@
   <div class="marquee"><div class="marquee-track"><span>We build the teams. You build the rest. &bull;</span><span>We build the teams. You build the rest. &bull;</span><span>We build the teams. You build the rest. &bull;</span><span>We build the teams. You build the rest. &bull;</span><span>We build the teams. You build the rest. &bull;</span><span>We build the teams. You build the rest. &bull;</span><span>We build the teams. You build the rest. &bull;</span><span>We build the teams. You build the rest. &bull;</span></div></div>
   <div class="wrap foot-bottom">
     <span>Copyright &copy; 2026 &mdash; Fazil Recruitment Group</span>
-    <div class="legal"><a href="#">Terms of use</a><a href="#">Privacy policy</a><a href="#">Cookies</a><a href="#">Whistleblowing</a><a href="#">Cookie settings</a></div>
+    <div class="legal"><a href="terms.html">Terms of use</a><a href="privacy.html">Privacy policy</a><a href="privacy.html#candidates">Candidate privacy notice</a><a href="cookies.html">Cookie policy</a></div>
   </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

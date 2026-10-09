@@ -25,7 +25,7 @@
       if (jobs.error || !jobs.data || !jobs.data.length) return fallback();
       window.FAZIL_JOBS = jobs.data.map(function (j) {
         return {
-          id: j.id, title: j.title, city: j.city, salary: j.salary, type: j.type,
+          id: j.id, title: j.title, city: j.city, country: j.country || 'UK', salary: j.salary, type: j.type,
           sector: j.sector, featured: !!j.featured, posted: j.posted,
           summary: j.summary || '', about: j.about || '',
           requirements: j.requirements || []
