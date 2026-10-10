@@ -157,7 +157,7 @@ function fazilInit() {
         var cl = $('[data-clear]', active); if (cl) cl.addEventListener('click', function (e) { e.preventDefault(); location.href = fazilPage('jobs.html'); });
       }
       list.innerHTML = out.length ? out.map(function (j) {
-        return '<a href="' + fazilPage('job.html') + '?id=' + j.id + '" class="job-row"><div><h3>' + j.title + '</h3><div class="meta"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span></div><div class="tags">' + (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<span class="tag">' + j.sector + '</span></div></div><div class="btn btn-outline">View role</div></a>';
+        return '<a href="' + fazilPage('job.html') + '?id=' + j.id + '" class="job-row"><div><h3>' + j.title + '</h3><div class="meta"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span></div><div class="tags">' + (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<span class="tag">' + j.sector + '</span></div></div><div class="btn btn-outline">View role &rarr;</div></a>';
       }).join('') : '<div class="empty">No roles match those filters yet. <a href="' + fazilPage('jobs.html') + '" style="color:var(--blue);font-weight:700">Clear filters</a> or <a href="register.html" style="color:var(--blue);font-weight:700">register</a> and we\'ll call you when one comes up.</div>';
     }
     render();
@@ -175,7 +175,7 @@ function fazilInit() {
         '<div class="job-head"><div class="wrap"><div class="crumbs" style="color:var(--grey-700)"><a href="' + (FAZIL_REGION==='US'?'us.html':'uk.html') + '">Home</a> / <a href="' + fazilPage('jobs.html') + '">Live jobs</a> / ' + j.sector + '</div>' +
         (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<h1>' + j.title + '</h1><div class="meta"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span><span>' + j.sector + '</span></div></div></div>' +
         '<section><div class="wrap job-detail"><div><p style="font-size:18px;color:var(--navy);font-weight:500">' + j.summary + '</p><h3>About this role</h3><p>' + j.about + '</p><h3>What we\'re looking for</h3><ul>' + j.requirements.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul><h3>How to apply</h3><p>Click apply and a sector specialist will call you within one working day. You\'ll need a Fazil account &mdash; it takes 30 seconds. We won\'t send your details to the employer until we\'ve spoken to you &mdash; see our <a href="privacy.html#candidates" target="_blank" style="color:var(--blue);font-weight:600">candidate privacy notice</a>.</p></div>' +
-        '<aside class="job-aside"><div data-apply-note class="notice"></div><button data-apply="' + j.id + '" class="btn btn-blue btn-lg">Apply for this role</button><a href="' + fazilPage('contact-candidates.html') + '" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', ' + ((j.country||'UK')==='US' ? 'United States' : 'United Kingdom') + '</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
+        '<aside class="job-aside"><div data-apply-note class="notice"></div><button data-apply="' + j.id + '" class="btn btn-blue btn-lg">Apply for this role &rarr;</button><a href="' + fazilPage('contact-candidates.html') + '" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', ' + ((j.country||'UK')==='US' ? 'United States' : 'United Kingdom') + '</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
     }
   }
 
@@ -216,9 +216,9 @@ function fazilInit2() {
     var limit = +box.getAttribute('data-limit') || 3;
     var list = JOBS.slice().sort(function (a, b) { return (b.featured - a.featured) || (b.posted > a.posted ? 1 : -1); }).slice(0, limit);
     box.innerHTML = list.map(function (j) {
-      return '<a href="' + fazilPage('job.html') + '?id=' + j.id + '" class="job-card"><div class="main"><h3>' + j.title + '</h3><span class="sector">' + j.sector + '</span></div>' +
-        '<div class="row"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span>' + j.type + '</span></div><div class="row"><b>' + j.salary + '</b></div>' +
-        '<div class="foot"><span>' + ago(j.posted) + '</span><span class="link">View role</span></div></a>';
+      return '<a href="' + fazilPage('job.html') + '?id=' + j.id + '" class="job-card"><span class="sector">' + j.sector + '</span><h3>' + j.title + '</h3>' +
+        '<div class="row">' + j.city + ', ' + (j.country || 'UK') + ' &middot; ' + j.type + '</div><div class="row"><b>' + j.salary + '</b></div>' +
+        '<div class="foot"><span>' + ago(j.posted) + '</span><span class="link">View role &rarr;</span></div></a>';
     }).join('');
   });
 
@@ -243,7 +243,7 @@ function fazilInit2() {
     if (mm[1] === 'uk') a.setAttribute('href', 'us.html' + mm[2]);
     else if (mirrored.indexOf(mm[1]) > -1) a.setAttribute('href', 'us-' + mm[1] + '.html' + mm[2]);
   });
-  var bar = document.querySelector('.region-bar span'); if (bar) bar.innerHTML = 'United States site';
+  var bar = document.querySelector('.region-bar span'); if (bar) bar.innerHTML = 'Fazil United States &middot; New York &amp; Dallas';
 })();
 
 /* ---- boot: wait for Supabase data, then render ---- */
