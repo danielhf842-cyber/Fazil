@@ -32,7 +32,6 @@
         };
       });
       if (set.data) set.data.forEach(function (r) {
-        if (r.key === 'candidates_placed') CFG.candidatesPlaced = r.value;
         if (r.key === 'years_experience') CFG.yearsExperience = r.value;
       });
     }).catch(fallback);

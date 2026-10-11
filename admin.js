@@ -173,11 +173,11 @@
   /* ================= SETTINGS ================= */
   async function loadSettings() {
     var r = await DB.getSettings(); if (r.error) return;
-    r.data.forEach(function (x) { if (x.key === 'candidates_placed') $('#set-placed').value = x.value; if (x.key === 'years_experience') $('#set-years').value = x.value; });
+    r.data.forEach(function (x) { if (x.key === 'years_experience') $('#set-years').value = x.value; });
   }
   $('#settings-form').addEventListener('submit', async function (e) {
     e.preventDefault();
-    var r = await DB.saveSettings([{ key: 'candidates_placed', value: $('#set-placed').value }, { key: 'years_experience', value: $('#set-years').value }]);
+    var r = await DB.saveSettings([{ key: 'years_experience', value: $('#set-years').value }]);
     msg(r.error ? 'err' : 'ok', r.error ? r.error.message : 'Numbers updated — live on the site now.');
   });
 
@@ -187,10 +187,14 @@
     if (r.error) return $('[data-apps-table]').innerHTML = '<div class="empty">' + esc(r.error.message) + '</div>';
     appsCache = r.data; renderApps();
   }
+  function who(a) {
+    if (a.user_id && a.profiles) return a.profiles;
+    return { full_name: a.guest_name, email: a.guest_email, phone: a.guest_phone, guest: true };
+  }
   function renderApps() {
     var q = ($('#apps-q').value || '').toLowerCase(), st = $('#apps-status').value, region = $('#apps-region').value;
     var list = appsCache.filter(function (a) {
-      var p = a.profiles || {}, j = a.jobs || {};
+      var p = who(a), j = a.jobs || {};
       if (st !== 'all' && a.status !== st) return false;
       if (region !== 'all' && (j.country || 'UK') !== region) return false;
       if (q && ((p.full_name || '') + ' ' + (p.email || '') + ' ' + (j.title || '') + ' ' + (j.city || '')).toLowerCase().indexOf(q) < 0) return false;
@@ -199,10 +203,12 @@
     $('[data-apps-count]').textContent = appsCache.length;
     $('[data-apps-shown]').textContent = list.length + ' of ' + appsCache.length;
     $('[data-apps-table]').innerHTML = list.map(function (a) {
-      var p = a.profiles || {}, j = a.jobs || {};
+      var p = who(a), j = a.jobs || {};
       return '<div class="admin-row app status-' + esc(a.status) + '">' +
-        '<div class="main"><b>' + esc(p.full_name || p.email || 'Candidate') + '</b><span>' + (p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + (p.phone ? ' · <a href="tel:' + esc(p.phone) + '">' + esc(p.phone) + '</a>' : '') + '</span>' +
-        '<span class="muted">Applied ' + fmt(a.created_at) + ' (' + ago(a.created_at) + ')</span></div>' +
+        '<div class="main"><b>' + esc(p.full_name || p.email || 'Candidate') + (p.guest ? ' <span class="tag guest">Guest</span>' : '') + '</b><span>' + (p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + (p.phone ? ' · <a href="tel:' + esc(p.phone) + '">' + esc(p.phone) + '</a>' : '') + '</span>' +
+        '<span class="muted">Applied ' + fmt(a.created_at) + ' (' + ago(a.created_at) + ')</span>' +
+        (a.cv_path ? '<span><button class="linkbtn" data-cv-open="' + esc(a.cv_path) + '">&#8595; ' + esc(a.cv_name || 'CV') + '</button></span>' : '<span class="muted">No CV attached</span>') +
+        (a.message ? '<span class="msg">&ldquo;' + esc(a.message) + '&rdquo;</span>' : '') + '</div>' +
         '<div class="main"><b>' + esc(j.title || a.job_id) + ' <span class="tag ' + ((j.country || 'UK') === 'US' ? 'us' : 'uk') + '">' + esc(j.country || 'UK') + '</span></b><span>' + esc(j.city || '') + '</span>' +
         '<textarea class="note" data-note="' + esc(a.id) + '" placeholder="Notes (e.g. called 10 Oct, interview Thursday)">' + esc(a.notes || '') + '</textarea></div>' +
         '<div class="acts col"><select class="status" data-status="' + esc(a.id) + '">' + STATUSES.map(function (s) { return '<option' + (s === a.status ? ' selected' : '') + '>' + s + '</option>'; }).join('') + '</select>' +
@@ -224,13 +230,15 @@
     noteTimers[id] = setTimeout(async function () { var r = await DB.updateApp(id, { notes: n.value }); if (r.error) msg('err', r.error.message); else { n.classList.add('saved'); setTimeout(function () { n.classList.remove('saved'); }, 1200); } }, 700);
   });
   document.addEventListener('click', async function (e) {
+    var o = e.target.closest('[data-cv-open]');
+    if (o) { e.preventDefault(); var r0 = await DB.cvUrl(o.getAttribute('data-cv-open')); if (r0.error) return msg('err', r0.error.message); window.open(r0.data.signedUrl, '_blank'); return; }
     var d = e.target.closest('[data-app-del]'); if (!d) return;
     if (!confirm('Remove this application?')) return;
     var r = await DB.deleteApp(d.getAttribute('data-app-del')); if (r.error) return msg('err', r.error.message);
     msg('ok', 'Application removed.'); loadApps().then(function () { renderJobs(); overview(); });
   });
   $('#apps-export').addEventListener('click', function () {
-    csv(appsCache.map(function (a) { var p = a.profiles || {}, j = a.jobs || {}; return { name: p.full_name, email: p.email, phone: p.phone, job: j.title, city: j.city, country: j.country || 'UK', status: a.status, notes: a.notes, applied: fmt(a.created_at) }; }), 'fazil-applications');
+    csv(appsCache.map(function (a) { var p = who(a), j = a.jobs || {}; return { name: p.full_name, email: p.email, phone: p.phone, type: p.guest ? 'guest' : 'account', job: j.title, city: j.city, country: j.country || 'UK', status: a.status, cv: a.cv_name || '', message: a.message || '', notes: a.notes, applied: fmt(a.created_at) }; }), 'fazil-applications');
   });
 
   /* ================= JOB ALERTS ================= */
@@ -261,9 +269,11 @@
   $('#alerts-export').addEventListener('click', function () { csv(alertsCache.map(function (x) { return { email: x.email, roles: x.roles, cities: x.cities, frequency: x.frequency, active: x.active !== false, created: fmt(x.created_at) }; }), 'fazil-job-alerts'); });
 
   /* ================= CANDIDATES ================= */
+  var cvsCache = [];
   async function loadCandidates() {
     var r = await DB.listProfiles();
     if (r.error) return $('[data-cands-table]').innerHTML = '<div class="empty">' + esc(r.error.message) + '</div>';
+    var c = await DB.listCvs(); cvsCache = (c && c.data) || [];
     candsCache = r.data.filter(function (p) { return !p.is_admin; }); renderCands();
   }
   function renderCands() {
@@ -272,12 +282,14 @@
     $('[data-cands-count]').textContent = candsCache.length;
     $('[data-cands-table]').innerHTML = list.map(function (p) {
       var apps = appsCache.filter(function (a) { return a.user_id === p.id; });
-      return '<div class="admin-row"><div class="main"><b>' + esc(p.full_name || '—') + '</b><span><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' + (p.phone ? ' · ' + esc(p.phone) : '') + '</span><span class="muted">Registered ' + fmt(p.created_at) + '</span></div>' +
+      var cv = cvsCache.filter(function (c) { return c.user_id === p.id; })[0];
+      return '<div class="admin-row"><div class="main"><b>' + esc(p.full_name || '—') + '</b><span><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' + (p.phone ? ' · ' + esc(p.phone) : '') + '</span><span class="muted">Registered ' + fmt(p.created_at) + '</span>' +
+        (cv ? '<span><button class="linkbtn" data-cv-open="' + esc(cv.path) + '">&#8595; ' + esc(cv.filename) + '</button></span>' : '<span class="muted">No CV on file</span>') + '</div>' +
         '<div class="main"><span>' + apps.length + ' application' + (apps.length === 1 ? '' : 's') + (apps.length ? ': ' + apps.map(function (a) { return esc((a.jobs || {}).title || a.job_id) + ' (' + a.status + ')'; }).join(', ') : '') + '</span></div><div></div></div>';
     }).join('') || '<div class="empty">No registered candidates yet.</div>';
   }
   $('#cands-q').addEventListener('input', renderCands);
-  $('#cands-export').addEventListener('click', function () { csv(candsCache.map(function (p) { return { name: p.full_name, email: p.email, phone: p.phone, registered: fmt(p.created_at), applications: appsCache.filter(function (a) { return a.user_id === p.id; }).length }; }), 'fazil-candidates'); });
+  $('#cands-export').addEventListener('click', function () { csv(candsCache.map(function (p) { var cv = cvsCache.filter(function (c) { return c.user_id === p.id; })[0]; return { name: p.full_name, email: p.email, phone: p.phone, registered: fmt(p.created_at), cv: cv ? cv.filename : '', applications: appsCache.filter(function (a) { return a.user_id === p.id; }).length }; }), 'fazil-candidates'); });
 
   /* ================= DATA LAYER ================= */
   var DB = DEMO ? demoDB() : {
@@ -293,12 +305,14 @@
     listAlerts: function () { return sb.from('job_alerts').select('*').order('created_at', { ascending: false }); },
     updateAlert: function (id, patch) { return sb.from('job_alerts').update(patch).eq('id', id); },
     deleteAlert: function (id) { return sb.from('job_alerts').delete().eq('id', id); },
-    listProfiles: function () { return sb.from('profiles').select('*').order('created_at', { ascending: false }); }
+    listProfiles: function () { return sb.from('profiles').select('*').order('created_at', { ascending: false }); },
+    listCvs: function () { return sb.from('cvs').select('*').eq('is_current', true); },
+    cvUrl: function (path) { return sb.storage.from('cvs').createSignedUrl(path, 120); }
   };
 
   function demoDB() {
     var jobs = (window.FAZIL_JOBS_FALLBACK || []).map(function (j) { return Object.assign({ published: true }, j); });
-    var settings = [{ key: 'candidates_placed', value: '500' }, { key: 'years_experience', value: '3' }];
+    var settings = [{ key: 'years_experience', value: '3' }];
     var profiles = [
       { id: 'u1', full_name: 'Tom Whitfield', email: 'tom.w@example.com', phone: '+44 7700 900123', created_at: '2026-10-01' },
       { id: 'u2', full_name: 'Priya Sharma', email: 'priya@example.com', phone: '', created_at: '2026-10-03' },
@@ -306,14 +320,15 @@
       { id: 'u4', full_name: 'Amara Osei', email: 'amara@example.com', phone: '+44 7700 900456', created_at: '2026-10-08' }
     ];
     var apps = [
-      { id: 'a1', user_id: 'u1', job_id: 'spm-london', status: 'submitted', notes: '', created_at: '2026-10-08' },
+      { id: 'a1', user_id: 'u1', job_id: 'spm-london', status: 'submitted', notes: '', cv_path: 'u1/cv.pdf', cv_name: 'Tom_Whitfield_CV.pdf', message: 'Available from 1 November, 4 weeks notice.', created_at: '2026-10-08' },
+      { id: 'a0', user_id: null, guest_name: 'Lewis Grant', guest_email: 'lewis.grant@example.com', guest_phone: '+44 7700 900789', job_id: 'me-eng-london', status: 'submitted', notes: '', cv_path: 'guest/cv.pdf', cv_name: 'Lewis Grant CV 2026.docx', created_at: '2026-10-09' },
       { id: 'a2', user_id: 'u2', job_id: 'me-cm-manchester', status: 'contacted', notes: 'Called 9 Oct — available from November.', created_at: '2026-10-07' },
       { id: 'a3', user_id: 'u3', job_id: 'mep-pm-dallas', status: 'interviewing', notes: 'Client interview Thu 16 Oct, 2pm CT.', created_at: '2026-10-05' },
       { id: 'a4', user_id: 'u1', job_id: 'site-eng-london', status: 'rejected', notes: 'Too junior for this one.', created_at: '2026-09-30' },
       { id: 'a5', user_id: 'u4', job_id: 'fitout-pm-london', status: 'placed', notes: 'Started 6 Oct.', created_at: '2026-09-15' }
     ];
     var alerts = [
-      { id: 'l1', email: 'jane@example.com', roles: ['Site Engineer', 'Planner / Scheduler'], cities: ['London', 'Leeds'], frequency: 'immediate', active: true, created_at: '2026-10-09' },
+      { id: 'l1', email: 'jane@example.com', roles: ['Site Engineer', 'Structural Design Engineer'], cities: ['London', 'Leeds'], frequency: 'immediate', active: true, created_at: '2026-10-09' },
       { id: 'l2', email: 'omar@example.com', roles: [], cities: ['Dallas'], frequency: 'weekly', active: true, created_at: '2026-10-06' },
       { id: 'l3', email: 'old@example.com', roles: ['Estimator'], cities: [], frequency: 'daily', active: false, created_at: '2026-09-02' }
     ];
@@ -332,7 +347,9 @@
       listAlerts: function () { return ok(alerts.slice()); },
       updateAlert: function (id, patch) { var a = alerts.filter(function (x) { return x.id === id; })[0]; if (a) Object.assign(a, patch); return ok(null); },
       deleteAlert: function (id) { alerts = alerts.filter(function (x) { return x.id !== id; }); return ok(null); },
-      listProfiles: function () { return ok(profiles.slice()); }
+      listProfiles: function () { return ok(profiles.slice()); },
+      listCvs: function () { return ok([{ user_id: 'u1', path: 'u1/cv.pdf', filename: 'Tom_Whitfield_CV.pdf' }, { user_id: 'u3', path: 'u3/cv.pdf', filename: 'Marcus-Lee-Resume.pdf' }]); },
+      cvUrl: function () { return { error: { message: 'Demo mode — CV downloads work on the live site.' } }; }
     };
   }
 

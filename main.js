@@ -45,7 +45,7 @@ function fazilInit() {
 
   /* ---------- live numbers ---------- */
   $$('[data-live-jobs]').forEach(function (el) { el.textContent = JOBS.length; });
-  $$('[data-placed]').forEach(function (el) { el.textContent = (CFG.candidatesPlaced || 0) + '+'; });
+  $$('[data-locations]').forEach(function (el) { el.textContent = uniq(JOBS.map(function (j) { return j.city; })).length; });
   $$('[data-years]').forEach(function (el) { el.textContent = (CFG.yearsExperience || 0) + '+'; });
 
   /* ---------- multi-select "reel" ---------- */
@@ -174,8 +174,8 @@ function fazilInit() {
       jd.innerHTML =
         '<div class="job-head"><div class="wrap"><div class="crumbs" style="color:var(--grey-700)"><a href="' + (FAZIL_REGION==='US'?'us.html':'uk.html') + '">Home</a> / <a href="' + fazilPage('jobs.html') + '">Live jobs</a> / ' + j.sector + '</div>' +
         (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<h1>' + j.title + '</h1><div class="meta"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span><span>' + j.sector + '</span></div></div></div>' +
-        '<section><div class="wrap job-detail"><div><p style="font-size:18px;color:var(--navy);font-weight:500">' + j.summary + '</p><h3>About this role</h3><p>' + j.about + '</p><h3>What we\'re looking for</h3><ul>' + j.requirements.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul><h3>How to apply</h3><p>Click apply and a sector specialist will call you within one working day. You\'ll need a Fazil account &mdash; it takes 30 seconds. We won\'t send your details to the employer until we\'ve spoken to you &mdash; see our <a href="privacy.html#candidates" target="_blank" style="color:var(--blue);font-weight:600">candidate privacy notice</a>.</p></div>' +
-        '<aside class="job-aside"><div data-apply-note class="notice"></div><button data-apply="' + j.id + '" class="btn btn-blue btn-lg">Apply for this role &rarr;</button><a href="' + fazilPage('contact-candidates.html') + '" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', ' + ((j.country||'UK')==='US' ? 'United States' : 'United Kingdom') + '</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
+        '<section><div class="wrap job-detail"><div><p style="font-size:18px;color:var(--navy);font-weight:500">' + j.summary + '</p><h3>About this role</h3><p>' + j.about + '</p><h3>What we\'re looking for</h3><ul>' + j.requirements.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul><h3>How to apply</h3><p>Click apply, attach your CV and a sector specialist will call you within one working day. You can apply as a guest, or with a Fazil account so your CV is saved for next time. We won\'t send your details to the employer until we\'ve spoken to you &mdash; see our <a href="privacy.html#candidates" target="_blank" style="color:var(--blue);font-weight:700">candidate privacy notice</a>.</p></div>' +
+        '<aside class="job-aside"><div data-apply-note class="notice"></div><button data-apply="' + j.id + '" class="btn btn-blue btn-lg">Apply for this role &rarr;</button><div class="apply-panel" data-apply-panel="' + j.id + '" hidden></div><a href="' + fazilPage('contact-candidates.html') + '" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', ' + ((j.country||'UK')==='US' ? 'United States' : 'United Kingdom') + '</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
     }
   }
 
