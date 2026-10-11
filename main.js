@@ -269,3 +269,11 @@ function fazilInit2() {
   document.body.appendChild(el);
   el.querySelector('button').addEventListener('click', function () { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} el.remove(); });
 })();
+
+/* stat cards: reveal one by one when scrolled into view */
+(function(){
+  var rows=document.querySelectorAll('.stat-cards'); if(!rows.length) return;
+  if(!('IntersectionObserver' in window)){rows.forEach(function(r){r.classList.add('in');});return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.35});
+  rows.forEach(function(r){io.observe(r);});
+})();

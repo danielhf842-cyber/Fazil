@@ -16,8 +16,8 @@
   if (!DEMO && !sb) { gate.innerHTML = '<div class="wrap" style="padding:80px 0"><div class="empty">Supabase isn\'t configured.</div></div>'; return; }
 
   var STATUSES = ['submitted', 'contacted', 'interviewing', 'offered', 'placed', 'rejected'];
-  var SECTORS = { UK: ['Construction & Civils', 'M&E & Building Services', 'Building Envelopes', 'Interior Fit-Out', 'Refurbishment', 'Project Controls'],
-                  US: ['Construction & Civil', 'MEP & Building Services', 'Building Envelopes', 'Interior Fit-Out', 'Renovation', 'Project Controls'] };
+  var SECTORS = { UK: ['Construction & Civils', 'M&E & Building Services', 'Building Envelopes', 'Interior Fit-Out', 'Refurbishment', 'Engineering & Design'],
+                  US: ['Construction & Civil', 'MEP & Building Services', 'Building Envelopes', 'Interior Fit-Out', 'Renovation', 'Engineering & Design'] };
   var noteTimer;
   function msg(t, m, sticky) { var n = $('#admin-notice'); n.className = 'notice ' + t; n.textContent = m; clearTimeout(noteTimer); if (!sticky) noteTimer = setTimeout(function () { n.className = 'notice'; }, 4000); }
   function fmt(d) { return d ? new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : ''; }

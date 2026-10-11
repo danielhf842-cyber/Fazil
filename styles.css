@@ -587,3 +587,16 @@ select.status{border:1.5px solid var(--border);border-radius:6px;padding:8px 10p
 .photo.av-3{background:linear-gradient(135deg,#16224f,#4f8fd6)}
 .member .li{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;font-weight:700;color:var(--blue)}
 @media (max-width:1000px){.team.three{grid-template-columns:1fr}}
+
+/* ---------- stat cards (career change) ---------- */
+.stat-cards{gap:20px}
+.stat-cards div{border-left:0;padding-left:0}
+.stat-row.stat-cards>div{padding:30px 28px 28px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;position:relative;overflow:hidden;opacity:0;transform:translateY(18px) scale(.97);transition:opacity .55s cubic-bezier(.2,.7,.2,1),transform .55s cubic-bezier(.2,.7,.2,1),background .2s}
+.stat-cards>div::before{content:"";position:absolute;left:0;top:0;height:4px;width:100%;background:var(--blue)}
+.stat-cards>div:hover{background:rgba(255,255,255,.1)}
+.stat-cards.in>div{opacity:1;transform:none}
+.stat-cards.in>div:nth-child(2){transition-delay:.12s}.stat-cards.in>div:nth-child(3){transition-delay:.24s}.stat-cards.in>div:nth-child(4){transition-delay:.36s}
+.stat-cards .v{font-size:52px}
+.stat-cards .k{margin-top:10px;font-size:15px}
+@media (prefers-reduced-motion:reduce){.stat-cards>div{opacity:1;transform:none;transition:none}}
+@media (max-width:700px){.stat-cards{grid-template-columns:1fr 1fr;gap:12px}.stat-cards>div{padding:22px 18px}.stat-cards .v{font-size:38px}}
