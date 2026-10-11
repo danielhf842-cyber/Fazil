@@ -157,7 +157,7 @@ function fazilInit() {
         var cl = $('[data-clear]', active); if (cl) cl.addEventListener('click', function (e) { e.preventDefault(); location.href = fazilPage('jobs.html'); });
       }
       list.innerHTML = out.length ? out.map(function (j) {
-        return '<a href="' + fazilPage('job.html') + '?id=' + j.id + '" class="job-row"><div><h3>' + j.title + '</h3><div class="meta"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span></div><div class="tags">' + (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<span class="tag">' + j.sector + '</span></div></div><div class="btn btn-outline">View role &rarr;</div></a>';
+        return '<a href="' + fazilPage('job.html') + '?id=' + j.id + '" class="job-row"><div><h3>' + j.title + '</h3><div class="meta"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span></div><div class="tags">' + (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<span class="tag">' + j.sector + '</span></div></div><div class="btn btn-outline">View role</div></a>';
       }).join('') : '<div class="empty">No roles match those filters yet. <a href="' + fazilPage('jobs.html') + '" style="color:var(--blue);font-weight:700">Clear filters</a> or <a href="register.html" style="color:var(--blue);font-weight:700">register</a> and we\'ll call you when one comes up.</div>';
     }
     render();
@@ -175,7 +175,7 @@ function fazilInit() {
         '<div class="job-head"><div class="wrap"><div class="crumbs" style="color:var(--grey-700)"><a href="' + (FAZIL_REGION==='US'?'us.html':'uk.html') + '">Home</a> / <a href="' + fazilPage('jobs.html') + '">Live jobs</a> / ' + j.sector + '</div>' +
         (j.featured ? '<span class="tag blue">Featured</span>' : '') + '<h1>' + j.title + '</h1><div class="meta"><span>' + j.city + ', ' + (j.country || 'UK') + '</span><span class="sal">' + j.salary + '</span><span>' + j.type + '</span><span>' + j.sector + '</span></div></div></div>' +
         '<section><div class="wrap job-detail"><div><p style="font-size:18px;color:var(--navy);font-weight:500">' + j.summary + '</p><h3>About this role</h3><p>' + j.about + '</p><h3>What we\'re looking for</h3><ul>' + j.requirements.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul><h3>How to apply</h3><p>Click apply, attach your CV and a sector specialist will call you within one working day. You can apply as a guest, or with a Fazil account so your CV is saved for next time. We won\'t send your details to the employer until we\'ve spoken to you &mdash; see our <a href="privacy.html#candidates" target="_blank" style="color:var(--blue);font-weight:700">candidate privacy notice</a>.</p></div>' +
-        '<aside class="job-aside"><div data-apply-note class="notice"></div><button data-apply="' + j.id + '" class="btn btn-blue btn-lg">Apply for this role &rarr;</button><div class="apply-panel" data-apply-panel="' + j.id + '" hidden></div><a href="' + fazilPage('contact-candidates.html') + '" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', ' + ((j.country||'UK')==='US' ? 'United States' : 'United Kingdom') + '</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
+        '<aside class="job-aside"><div data-apply-note class="notice"></div><button data-apply="' + j.id + '" class="btn btn-blue btn-lg">Apply for this role</button><div class="apply-panel" data-apply-panel="' + j.id + '" hidden></div><a href="' + fazilPage('contact-candidates.html') + '" class="btn btn-outline">Refer a candidate</a><dl><dt>Location</dt><dd>' + j.city + ', ' + ((j.country||'UK')==='US' ? 'United States' : 'United Kingdom') + '</dd><dt>Salary</dt><dd>' + j.salary + '</dd><dt>Contract</dt><dd>' + j.type + '</dd><dt>Sector</dt><dd>' + j.sector + '</dd><dt>Posted</dt><dd>' + j.posted + '</dd><dt>Reference</dt><dd>FZ-' + j.id.toUpperCase() + '</dd></dl></aside></div></section>';
     }
   }
 
@@ -218,7 +218,7 @@ function fazilInit2() {
     box.innerHTML = list.map(function (j) {
       return '<a href="' + fazilPage('job.html') + '?id=' + j.id + '" class="job-card"><span class="sector">' + j.sector + '</span><h3>' + j.title + '</h3>' +
         '<div class="row">' + j.city + ', ' + (j.country || 'UK') + ' &middot; ' + j.type + '</div><div class="row"><b>' + j.salary + '</b></div>' +
-        '<div class="foot"><span>' + ago(j.posted) + '</span><span class="link">View role &rarr;</span></div></a>';
+        '<div class="foot"><span>' + ago(j.posted) + '</span><span class="link">View role</span></div></a>';
     }).join('');
   });
 
@@ -235,7 +235,7 @@ function fazilInit2() {
 /* ---- shared pages (login, register, account, admin, legal): follow the visitor's region ---- */
 (function () {
   if (document.documentElement.getAttribute('data-region') || FAZIL_REGION !== 'US') return;
-  var mirrored = ['jobs','job','candidates','employers','about','contact','contact-candidates','contact-employers','insights','job-alerts','international','career-change'];
+  var mirrored = ['jobs','job','candidates','employers','about','contact','contact-candidates','contact-employers','insights','job-alerts','international','career-change','staffing','permanent-recruitment','temp-to-perm','approach'];
   document.querySelectorAll('header a, footer a, .mobile-menu a, .region-bar a, .cta-band a').forEach(function (a) {
     var h = a.getAttribute('href') || '';
     var mm = h.match(/^([a-z-]+)\.html(.*)$/);
@@ -244,6 +244,7 @@ function fazilInit2() {
     else if (mirrored.indexOf(mm[1]) > -1) a.setAttribute('href', 'us-' + mm[1] + '.html' + mm[2]);
   });
   var bar = document.querySelector('.region-bar span'); if (bar) bar.innerHTML = 'Fazil United States &middot; New York &amp; Dallas';
+  document.querySelectorAll('a[href="mailto:uk@fazil-construction.com"]').forEach(function (a) { a.setAttribute('href', 'mailto:us@fazil-construction.com'); if (a.textContent.trim() === 'uk@fazil-construction.com') a.textContent = 'us@fazil-construction.com'; });
 })();
 
 /* ---- boot: wait for Supabase data, then render ---- */

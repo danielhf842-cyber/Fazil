@@ -94,7 +94,7 @@
       cvbox.innerHTML =
         (cur ? '<div class="cv-current"><div><span class="cv-tag">Current CV</span><b>' + esc(cur.filename) + '</b><small>Uploaded ' + fmtDate(cur.created_at) + (cur.size_bytes ? ' &middot; ' + Math.round(cur.size_bytes / 1024) + ' KB' : '') + '</small></div><div class="cv-acts"><button class="btn btn-outline" data-cv-open="' + esc(cur.path) + '">Open</button></div></div>'
              : '<p>No CV on file yet. Upload one once and every application after that is one click.</p>') +
-        '<form class="cv-upload" data-cv-upload><div class="field file"><label>' + (cur ? 'Replace with a new CV' : 'Upload your CV') + ' (PDF or Word, max 10 MB)</label><input type="file" name="cvfile" accept=".pdf,.doc,.docx" required></div><button class="btn btn-blue" type="submit">' + (cur ? 'Upload new CV &rarr;' : 'Save CV &rarr;') + '</button>' + (cur ? '<p class="apply-hint">Your current CV is kept below, so you can switch back if you upload the wrong file.</p>' : '') + '</form>' +
+        '<form class="cv-upload" data-cv-upload><div class="field file"><label>' + (cur ? 'Replace with a new CV' : 'Upload your CV') + ' (PDF or Word, max 10 MB)</label><input type="file" name="cvfile" accept=".pdf,.doc,.docx" required></div><button class="btn btn-blue" type="submit">' + (cur ? 'Upload new CV' : 'Save CV') + '</button>' + (cur ? '<p class="apply-hint">Your current CV is kept below, so you can switch back if you upload the wrong file.</p>' : '') + '</form>' +
         (old.length ? '<div class="cv-old"><h3>Previous versions</h3>' + old.map(function (c) { return '<div class="cv-row"><div><b>' + esc(c.filename) + '</b><small>' + fmtDate(c.created_at) + '</small></div><div class="cv-acts"><button class="btn btn-ghost" data-cv-open="' + esc(c.path) + '">Open</button><button class="btn btn-ghost" data-cv-use="' + esc(c.id) + '">Make current</button><button class="btn btn-ghost" data-cv-del="' + esc(c.id) + '" data-path="' + esc(c.path) + '">Delete</button></div></div>'; }).join('') + '</div>' : '');
     }
     await renderCvs();
@@ -104,7 +104,7 @@
       var file = f.elements.namedItem('cvfile').files[0]; var err = checkFile(file); if (err) return say('err', err);
       var b = f.querySelector('button'); b.disabled = true; b.textContent = 'Uploading…';
       try { await saveNewCv(u.id, file); say('ok', 'CV saved. It will be used for your next application.'); await renderCvs(); await renderApps(); }
-      catch (ex) { say('err', ex.message); b.disabled = false; b.innerHTML = 'Upload new CV &rarr;'; }
+      catch (ex) { say('err', ex.message); b.disabled = false; b.innerHTML = 'Upload new CV'; }
     });
     document.addEventListener('click', async function (e) {
       var o = e.target.closest('[data-cv-open]'); if (o) { e.preventDefault(); return openCv(o.getAttribute('data-cv-open')); }
@@ -227,7 +227,7 @@
             '<div class="field file" data-newcv hidden><label>New CV (PDF or Word, max 10 MB)</label><input type="file" name="cvfile" accept=".pdf,.doc,.docx"></div>'
           : '<div class="field file"><label>Your CV (PDF or Word, max 10 MB)</label><input type="file" name="cvfile" accept=".pdf,.doc,.docx" required></div><p class="apply-hint">We\'ll save it to your account so next time it\'s one click.</p>') +
         '<div class="field"><label>Message (optional)</label><textarea name="message" rows="3" placeholder="Anything the consultant should know &mdash; notice period, availability, day rate&hellip;"></textarea></div>' +
-        '<button type="submit" class="btn btn-blue btn-lg">Send application &rarr;</button>' +
+        '<button type="submit" class="btn btn-blue btn-lg">Send application</button>' +
         '</form>';
       panel.querySelectorAll('input[name=cv]').forEach(function (r) { r.addEventListener('change', function () { var nf = panel.querySelector('[data-newcv]'); if (nf) { nf.hidden = r.value !== 'new'; var inp = nf.querySelector('input'); if (inp) inp.required = r.value === 'new'; } }); });
     } else {
@@ -240,7 +240,7 @@
         '<div class="field file"><label>Your CV (PDF or Word, max 10 MB)</label><input type="file" name="cvfile" accept=".pdf,.doc,.docx" required></div>' +
         '<div class="field"><label>Message (optional)</label><textarea name="message" rows="3" placeholder="Anything the consultant should know&hellip;"></textarea></div>' +
         '<p class="apply-hint">By applying you agree to our <a href="privacy.html#candidates" target="_blank">candidate privacy notice</a>.</p>' +
-        '<button type="submit" class="btn btn-blue btn-lg">Send application &rarr;</button>' +
+        '<button type="submit" class="btn btn-blue btn-lg">Send application</button>' +
         '</form>';
     }
   }
@@ -270,7 +270,7 @@
     var jobId = form.getAttribute('data-apply-form');
     var note = document.querySelector('[data-apply-note]');
     var btn = form.querySelector('button[type=submit]');
-    var fail = function (m) { btn.disabled = false; btn.innerHTML = 'Send application &rarr;'; if (note) { note.className = 'notice err'; note.textContent = m; note.scrollIntoView({ block: 'nearest' }); } };
+    var fail = function (m) { btn.disabled = false; btn.innerHTML = 'Send application'; if (note) { note.className = 'notice err'; note.textContent = m; note.scrollIntoView({ block: 'nearest' }); } };
     btn.disabled = true; btn.textContent = 'Sending…';
     try {
       var s = await sb.auth.getSession(); var u = s.data.session && s.data.session.user;

@@ -655,3 +655,8 @@ select.status{border:1.5px solid var(--border);border-radius:6px;padding:8px 10p
 .admin-row .msg{font-size:13px;color:var(--grey-700);font-style:italic;margin-top:4px;display:block}
 .field[hidden]{display:none}
 .cv-opt input[type=radio]{width:16px;height:16px;flex-shrink:0;margin:2px 0 0}
+
+.team.four{grid-template-columns:repeat(4,1fr);max-width:none}
+.photo.av-4{background:linear-gradient(135deg,#0b3d7a,#2a7fd4)}
+@media (max-width:1000px){.team.four{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.team.four{grid-template-columns:1fr}}
